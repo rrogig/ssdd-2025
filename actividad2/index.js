@@ -28,7 +28,10 @@ async function ejecucionSecuencial() {
         for (const usuario of usuarios) {
             // espera a que termine la llamada de posteos antes de continuar con el siguiente usuario
             const posteos = await fetchPosteosUsuario(usuario.id);
-            console.log(`Usuario: ${usuario.name}, Posteos: ${posteos.length}`);
+            console.log(`Usuario: ${usuario.name}`);
+            posteos.forEach(post => {
+                console.log(`   - (${post.id}) ${post.title}`);
+            });
         }
     } catch (error) {
         console.error('Error en ejecución secuencial:', error);
@@ -43,7 +46,7 @@ async function ejecucionConcurrente() {
         // para cada usuario, crea una promesa para fetchPosteosUsuario
         const promesasPosteos = usuarios.map(async (usuario) => {
             const posteos = await fetchPosteosUsuario(usuario.id);
-            return {name: usuario.name, posteos: posteos.length};
+            return {name: usuario.name, posteos};
         });
 
     // esperamos a que todas las promesas se resuelvan
@@ -51,7 +54,10 @@ async function ejecucionConcurrente() {
 
     // mostramos los resultados
     resultados.forEach(resultado => {
-        console.log(`Usuario: ${resultado.name}, Posteos: ${resultado.posteos}`);
+        console.log(`Usuario: ${resultado.name}`);
+        resultado.posteos.forEach(post => {
+            console.log(`   - (${post.id}) ${post.title}`);
+        });
     });
 
     } catch (error) {
